@@ -4,6 +4,21 @@ import sqlite3
 from datetime import datetime
 import winsound
 
+# Create database table 
+conn = sqlite3.connect('alarms.db')
+c = conn.cursor()
+c.execute('''CREATE TABLE IF NOT EXISTS alarms
+             (id INTEGER PRIMARY KEY, time TEXT)''')
+conn.commit()
+conn.close()
+
+# Function to update the current time label and check alarms
+def update_time():
+    current_time = datetime.now().strftime("%H:%M:%S")
+    label_current_time.config(text=current_time)
+    check_alarm()
+    label_current_time.after(1000, update_time)  # Update time every second
+
 # Function to add a new alarm to the database
 def add_alarm():
     time = entry_time.get().strip()
